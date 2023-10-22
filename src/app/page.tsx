@@ -3,11 +3,11 @@
 import { useRef, useState } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
 import { useBard } from "@/stores/useBard";
 import { TConvo } from "@/types/types";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark, atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { SiReacttable } from "react-icons/si";
 
 export default function Home() {
   const syntaxHighlighterRef = useRef<SyntaxHighlighter | null>(null);
@@ -39,7 +39,8 @@ export default function Home() {
       <div className="text-[#f0f0f0] w-full max-w-screen-lg flex flex-col gap-6">
         {convo.map(({ sender, content }, index) => (
           <Markdown
-            className={`${senderType(sender)} bg-slate-500 p-3`}
+            className={`${senderType(sender)} bg-slate-500 p-6 rounded-xl`}
+            remarkPlugins={[remarkGfm]}
             key={index}
             components={{
               code(props) {
@@ -66,13 +67,17 @@ export default function Home() {
             {content}
           </Markdown>
         ))}
-        {loading && <div className="self-start">Loading...</div>}
+        {loading && (
+          <div className="self-start animate-pulse">
+            <SiReacttable size={30} />
+          </div>
+        )}
       </div>
-      <div className="flex gap-2">
+      <div className="w-full max-w-screen-lg flex gap-2 mt-6">
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="text-black rounded-lg"
+          className="w-full text-black rounded-lg"
         />
         <button
           onClick={GetBardResponse}
